@@ -1,0 +1,233 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap');
+
+/* Custom theme configuration */
+@theme {
+  /* Colors */
+  --color-purple-primary: #6600e7;
+  --color-purple-button: #831bd5;
+  --color-pink-primary: #d166a1;
+  --color-pink-button: #e17fa3;
+  --color-gray-line: #d9d9d9;
+  --color-background: rgba(255, 255, 255, 0.11);
+  --color-background-light: #f5f3f0;
+
+  /* Font family */
+  --font-manrope: 'Manrope', sans-serif;
+
+  /* Box shadows */
+  --shadow-nav: 0px 5px 10px rgba(0, 0, 0, 0.25);
+  --shadow-card: 0px 10px 100px rgba(0, 0, 0, 0.25);
+  --shadow-card-strong: 0px 10px 66px rgba(0, 0, 0, 0.45);
+  --shadow-button: 0px 8px 9px rgba(0, 0, 0, 0.25);
+  --shadow-toggle: 0px 15px 50px rgba(0, 0, 0, 0.25);
+
+  /* Border radius */
+  --radius-nav: 15px;
+  --radius-card: 25px;
+  --radius-button: 15px;
+  --radius-doc: 20px;
+  --radius-toggle: 20px;
+}
+
+/* Base styles */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    font-family: var(--font-manrope);
+  }
+
+  body {
+    background-color: var(--color-background-light);
+    color: black;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Custom component classes */
+@layer components {
+  /* Gradient text utility */
+  .text-gradient {
+    background: linear-gradient(to bottom, var(--color-purple-primary), var(--color-pink-primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-horizontal {
+    background: linear-gradient(to right, var(--color-pink-primary), var(--color-purple-primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Button with gradient blur effect */
+  .btn-gradient-clear {
+    position: relative;
+    border-radius: var(--radius-button);
+    color: white;
+    font-weight: bold;
+    overflow: hidden;
+  }
+
+  .btn-gradient-clear::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, var(--color-purple-button), var(--color-pink-button));
+    border-radius: var(--radius-button);
+    filter: blur(2.5px);
+    z-index: -1;
+  }
+
+  /* Nav button highlight */
+  .nav-highlight::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, var(--color-purple-primary), var(--color-pink-primary));
+    border-radius: var(--radius-button);
+    filter: blur(12.5px);
+    z-index: -1;
+  }
+
+  /* Card styles */
+  .card {
+    background: white;
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+  }
+
+  .card-strong {
+    background: white;
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card-strong);
+  }
+
+  /* Section container - standard scroll, not pinned by default */
+  .section {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-color: var(--color-background-light);
+  }
+
+  /* Document component base */
+  .floating-doc {
+    position: absolute;
+  }
+
+  /* Custom gradients */
+  .bg-gradient-primary {
+    background: linear-gradient(to bottom, var(--color-purple-primary), var(--color-pink-primary));
+  }
+
+  .bg-gradient-button {
+    background: linear-gradient(to bottom, var(--color-purple-button), var(--color-pink-button));
+  }
+
+  .bg-gradient-primary-horizontal {
+    background: linear-gradient(to right, var(--color-pink-primary), var(--color-purple-primary));
+  }
+
+  /* Backdrop blur overlay - light frosted effect */
+  .backdrop-blur-overlay {
+    backdrop-filter: blur(12.5px);
+    -webkit-backdrop-filter: blur(12.5px);
+    background: rgba(145, 143, 143, 0.45);
+  }
+
+  /* Blur variants */
+  .blur-nav-button {
+    filter: blur(12.5px);
+  }
+
+  /* Custom shadows */
+  .shadow-nav {
+    box-shadow: var(--shadow-nav);
+  }
+
+  .shadow-card {
+    box-shadow: var(--shadow-card);
+  }
+
+  .shadow-toggle {
+    box-shadow: var(--shadow-toggle);
+  }
+
+  .shadow-button {
+    box-shadow: var(--shadow-button);
+  }
+
+  /* Custom border radius */
+  .rounded-nav {
+    border-radius: var(--radius-nav);
+  }
+
+  .rounded-card {
+    border-radius: var(--radius-card);
+  }
+
+  .rounded-button {
+    border-radius: var(--radius-button);
+  }
+
+  .rounded-toggle {
+    border-radius: var(--radius-toggle);
+  }
+
+  /* Font utility */
+  .font-manrope {
+    font-family: var(--font-manrope);
+  }
+
+  /* Custom colors */
+  .text-purple-primary {
+    color: var(--color-purple-primary);
+  }
+
+  .text-pink-primary {
+    color: var(--color-pink-primary);
+  }
+
+  .bg-background {
+    background-color: var(--color-background);
+  }
+
+  .bg-background-light {
+    background-color: var(--color-background-light);
+  }
+}
+
+@layer utilities {
+  /* Text shadow for glowing text */
+  .text-glow {
+    text-shadow: 0px 15px 60px #ffffff;
+  }
+
+  /* Hide scrollbar */
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Smooth transitions */
+  .transition-smooth {
+    transition: all 500ms ease-out;
+  }
+
+  .transition-fast {
+    transition: all 300ms ease-out;
+  }
+}

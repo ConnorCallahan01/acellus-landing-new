@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVG Morph Test</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            width: 800px;
+            height: 500px;
+            position: relative;
+            margin: 20px 0;
+            border: 1px solid #ccc;
+            background: #f0f0f0;
+        }
+        .controls {
+            margin: 20px 0;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            cursor: pointer;
+        }
+        .text-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <h1>SVG Morph Test</h1>
+    
+    <div class="container">
+        <div class="text-container">
+            <p>This is test text to see if it fits properly within the SVG shape</p>
+        </div>
+        
+        <svg viewBox="0 0 800 500" style="width: 100%; height: 100%;">
+            <defs>
+                <linearGradient id="cloudGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" style="stop-color:#6600e7;stop-opacity:1" />
+                    <stop offset="30%" style="stop-color:#7722dd;stop-opacity:1" />
+                    <stop offset="60%" style="stop-color:#9944cc;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#d166a1;stop-opacity:1" />
+                </linearGradient>
+                <filter id="cloudBlur" x="-30%" y="-30%" width="160%" height="160%">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="3" />
+                </filter>
+            </defs>
+            <!-- Shape that morphs from square to cloud -->
+            <path 
+                id="morphShape"
+                d="M 150,380 C 150,380 150,150 150,150 C 150,150 150,150 250,150 C 250,150 350,150 400,150 C 400,150 550,150 550,150 C 550,150 650,150 650,150 C 650,150 650,380 650,380 L 150,380 Z"
+                fill="url(#cloudGradient)"
+                filter="url(#cloudBlur)"
+            />
+        </svg>
+    </div>
+    
+    <div class="controls">
+        <button id="squareBtn">Square</button>
+        <button id="cloudBtn">Cloud</button>
+    </div>
+
+    <script>
+        // Square path: simple rectangle with matching control points for smooth morph
+        const squarePath = "M 150,380 C 150,380 150,150 150,150 C 150,150 150,150 250,150 C 250,150 350,150 400,150 C 400,150 550,150 550,150 C 550,150 650,150 650,150 C 650,150 650,380 650,380 L 150,380 Z";
+        
+        // Cloud path: distinct rounded bumps matching the cloud icon
+        const cloudPath = "M 150,380 C 150,380 150,340 190,320 C 170,280 200,240 250,240 C 250,200 290,170 350,170 C 380,150 420,150 450,170 C 510,170 550,200 550,240 C 600,240 630,280 610,320 C 650,340 650,380 650,380 L 150,380 Z";
+        
+        const morphShape = document.getElementById('morphShape');
+        const squareBtn = document.getElementById('squareBtn');
+        const cloudBtn = document.getElementById('cloudBtn');
+        
+        squareBtn.addEventListener('click', () => {
+            gsap.to(morphShape, {
+                attr: { d: squarePath },
+                duration: 0.6,
+                ease: 'power2.inOut'
+            });
+        });
+        
+        cloudBtn.addEventListener('click', () => {
+            gsap.to(morphShape, {
+                attr: { d: cloudPath },
+                duration: 0.6,
+                ease: 'power2.inOut'
+            });
+        });
+        
+        // Initialize with square shape
+        gsap.set(morphShape, { attr: { d: squarePath } });
+    </script>
+</body>
+</html>
