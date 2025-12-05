@@ -92,16 +92,17 @@
   // Number of sections (for scroll calculation)
   const totalSections = 8;
 
-  onMount(async () => {
+  onMount(() => {
     if (!browser) return;
 
-    const { gsap } = await import('gsap');
-    const { ScrollTrigger } = await import('gsap/ScrollTrigger');
-    
-    gsap.registerPlugin(ScrollTrigger);
+    const setupAnimations = async () => {
+      const { gsap } = await import('gsap');
+      const { ScrollTrigger } = await import('gsap/ScrollTrigger');
+      
+      gsap.registerPlugin(ScrollTrigger);
 
-    // Wait for DOM to be ready
-    await new Promise(resolve => setTimeout(resolve, 200));
+      // Wait for DOM to be ready
+      await new Promise(resolve => setTimeout(resolve, 200));
 
     // Set initial states - hide all content except cover
     const contentLayers = [problemContent, solutionContent, solution2Content, howWeWorkContent, teamContent, newsroomContent, footerContent];
@@ -174,28 +175,29 @@
     // ========================================
     masterTimeline
       // Fade out blur overlay
-      .to(blurOverlay, { opacity: 0, duration: 0.3 }, 0)
+      .to(blurOverlay, { opacity: 0, duration: 0.4, ease: 'power1.inOut' }, 0)
       // Show lines and draw them
-      .to(linesContainer, { opacity: 1, duration: 0.2 }, 0.1)
+      .to(linesContainer, { opacity: 1, duration: 0.3, ease: 'power1.inOut' }, 0.1)
       .to(linePaths, { 
         strokeDashoffset: 0, 
-        duration: 0.4,
-        stagger: 0.03
+        duration: 0.5,
+        stagger: 0.04,
+        ease: 'power2.out'
       }, 0.1)
       // Fade out cover content
-      .to(coverContent, { opacity: 0, duration: 0.2 }, 0.3)
-      .set(coverContent, { display: 'none' }, 0.5)
+      .to(coverContent, { opacity: 0, duration: 0.3, ease: 'power1.inOut' }, 0.3)
+      .set(coverContent, { display: 'none' }, 0.6)
       // Show gradient as square for Problem section
       .to(gradientBg, { 
         opacity: 1, 
-        duration: 0.4,
+        duration: 0.5,
         ease: 'power2.out'
       }, 0.4)
       // Set initial shape as square
       .set(morphShape, { attr: { d: squarePath } }, 0.4)
       // Fade in problem content
-      .set(problemContent, { display: 'flex' }, 0.4)
-      .to(problemContent, { opacity: 1, duration: 0.3 }, 0.5);
+      .set(problemContent, { display: 'flex' }, 0.5)
+      .to(problemContent, { opacity: 1, duration: 0.4, ease: 'power2.out' }, 0.6);
 
     // Animate documents from Cover to Problem layout
     docComponents.forEach((comp, i) => {
@@ -203,13 +205,13 @@
       if (element && problemLayout[i]) {
         const target = problemLayout[i];
         masterTimeline.to(element, {
-          left: `${target.x}%`,
-          top: `${target.y}%`,
+          x: `${target.x}%`,
+          y: `${target.y}%`,
           rotation: target.rotation,
           scale: target.scale,
-          duration: 0.5,
-          ease: 'power1.inOut'
-        }, 0); // Start at beginning of timeline
+          duration: 0.8,
+          ease: 'power2.inOut'
+        }, 0.1); // Slight delay to start after blur overlay starts fading
       }
     });
 
@@ -218,34 +220,34 @@
     // ========================================
     masterTimeline
       // Fade out lines
-      .to(linesContainer, { opacity: 0, duration: 0.2 }, 1)
+      .to(linesContainer, { opacity: 0, duration: 0.3, ease: 'power1.inOut' }, 1)
       // Start morphing shape from square to cloud
       .to(morphShape, {
         attr: { d: cloudPath },
-        duration: 0.6,
+        duration: 0.8,
         ease: 'power2.inOut'
       }, 1)
       // Fade out problem content while morphing
-      .to(problemContent, { opacity: 0, duration: 0.3 }, 1.2)
-      .set(problemContent, { display: 'none' }, 1.4)
+      .to(problemContent, { opacity: 0, duration: 0.4, ease: 'power1.inOut' }, 1.3)
+      .set(problemContent, { display: 'none' }, 1.6)
       // Fade in solution content after morphing
-      .set(solutionContent, { display: 'flex' }, 1.3)
-      .to(solutionContent, { opacity: 1, duration: 0.3 }, 1.4);
+      .set(solutionContent, { display: 'flex' }, 1.5)
+      .to(solutionContent, { opacity: 1, duration: 0.4, ease: 'power2.out' }, 1.6);
 
     // Animate documents from Problem (network) to Solution (cloud edges)
-    // Delayed start (1.4) so cloud fully forms first, slower duration (0.8) for smooth convergence
+    // Start earlier (1.2) to overlap with cloud morphing for smoother transition
     docComponents.forEach((comp, i) => {
       const element = comp?.getElement();
       if (element && solutionLayout[i]) {
         const target = solutionLayout[i];
         masterTimeline.to(element, {
-          left: `${target.x}%`,
-          top: `${target.y}%`,
+          x: `${target.x}%`,
+          y: `${target.y}%`,
           rotation: target.rotation,
           scale: target.scale,
-          duration: 0.8,
-          ease: 'power2.out'
-        }, 1.4); // Delayed start - cloud morphs first (1.0-1.6), then docs converge
+          duration: 1.0,
+          ease: 'power2.inOut'
+        }, 1.2); // Start earlier to overlap with cloud morphing
       }
     });
 
@@ -298,9 +300,16 @@
       .set(footerContent, { display: 'flex' }, 6.3)
       .to(footerContent, { opacity: 1, duration: 0.3 }, 6.4);
 
-    // Cleanup
+      // Cleanup
+      return () => {
+        ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+      };
+    };
+
+    setupAnimations();
+    
     return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+      // Cleanup function for onMount
     };
   });
 </script>

@@ -38,9 +38,10 @@
   onMount(() => {
     if (docElement) {
       // Initial transform setup via GSAP to avoid conflicts
+      // Use absolute positioning for x/y to match timeline animations
       gsap.set(docElement, {
-        xPercent: -50,
-        yPercent: -50,
+        x: typeof x === 'number' ? `${x}%` : x,
+        y: typeof y === 'number' ? `${y}%` : y,
         rotation: rotation,
         scale: scale
       });
@@ -110,7 +111,9 @@
 <style>
   .floating-doc {
     position: absolute;
-    will-change: transform, left, top;
+    left: 0;
+    top: 0;
+    will-change: transform;
   }
 
   .doc-inner {
